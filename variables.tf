@@ -1,61 +1,78 @@
-variable "aws_region" {
-  description = "AWS region where resources will be created"
-  type        = string
-  default     = "us-east-1"
-}
-
-variable "lambda_function_name" {
+variable "function_name" {
   description = "Name of the Lambda function"
   type        = string
-  default     = "example-lambda-function"
 }
 
-variable "lambda_handler" {
-  description = "Lambda function handler"
+variable "filename" {
+  description = "Path to the function's deployment package"
   type        = string
-  default     = "lambda_function.lambda_handler"
 }
 
-variable "lambda_runtime" {
-  description = "Lambda function runtime"
+variable "handler" {
+  description = "Function entrypoint in your code"
   type        = string
-  default     = "python3.9"
+  default     = "index.handler"
 }
 
-variable "lambda_timeout" {
-  description = "Lambda function timeout in seconds"
+variable "runtime" {
+  description = "Runtime environment for the Lambda function"
+  type        = string
+  default     = "nodejs18.x"
+}
+
+variable "timeout" {
+  description = "Amount of time your Lambda function has to run in seconds"
   type        = number
   default     = 30
 }
 
-variable "lambda_memory_size" {
-  description = "Lambda function memory size in MB"
+variable "memory_size" {
+  description = "Amount of memory in MB your Lambda function can use at runtime"
   type        = number
   default     = 128
 }
 
-variable "lambda_zip_path" {
-  description = "Path to the Lambda function zip file"
-  type        = string
+variable "publish" {
+  description = "Whether to publish creation/change as new Lambda Function Version"
+  type        = bool
+  default     = false
 }
 
-variable "lambda_environment_variables" {
+variable "environment_variables" {
   description = "Environment variables for the Lambda function"
   type        = map(string)
   default     = {}
 }
 
-variable "log_retention_days" {
-  description = "Number of days to retain CloudWatch logs"
+variable "log_retention_in_days" {
+  description = "Specifies the number of days you want to retain log events in the specified log group"
   type        = number
-  default     = 30
+  default     = 14
 }
 
 variable "tags" {
-  description = "Tags to apply to all resources"
+  description = "A map of tags to add to all resources"
   type        = map(string)
-  default     = {
-    Environment = "development"
-    Project     = "lambda-infra"
-  }
+  default     = {}
+}
+
+variable "vpc_config" {
+  description = "VPC configuration for the Lambda function"
+  type = object({
+    subnet_ids         = list(string)
+    security_group_ids = list(string)
+  })
+  default = null
+}
+
+variable "vpc_subnet_ids" {
+  description = "List of subnet IDs for the Lambda function"
+  type        = list(string)
+  default     = []
+}
+
+variable "vpc_security_group_ids" {
+  description = "List of security group IDs for the Lambda function"
+  type        = list(string)
+  default     = []
 } 
